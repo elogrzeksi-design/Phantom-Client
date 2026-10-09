@@ -166,7 +166,7 @@ public final class PhantomScreen extends Screen {
     public void render(
         DrawContext ctx, int mouseX, int mouseY, float delta
     ) {
-        renderBackground(ctx, mouseX, mouseY, delta);
+       // Nie wywołujemy renderBackground(), bo powoduje podwójne rozmycie.
 
         int accent = "VIOLET".equals(PhantomConfig.get().accent)
             ? 0xFF9B7CFF
