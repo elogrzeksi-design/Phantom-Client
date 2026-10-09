@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "phantomclient",
+  "version": "${version}",
+  "name": "Phantom Client",
+  "description": "Lightweight PvP client menu, HUD and client-side performance preferences.",
+  "authors": ["Phantom Team"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": { "client": ["pl.phantom.client.PhantomClient"] },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
