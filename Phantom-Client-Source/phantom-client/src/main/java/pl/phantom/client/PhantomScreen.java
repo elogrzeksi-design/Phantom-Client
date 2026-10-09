@@ -7,14 +7,13 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.particle.ParticlesMode;
-import java.util.ArrayList;
-import java.util.List;
 
-/** Custom dark client menu. All switches here change real saved settings. */
 public final class PhantomScreen extends Screen {
-    private enum Tab { PERFORMANCE, VISUALS, HUD, TEXTURES, SETTINGS }
+    private enum Tab {
+        PERFORMANCE, VISUALS, HUD, TEXTURES, SETTINGS
+    }
+
     private Tab tab = Tab.PERFORMANCE;
-    private final List<ButtonWidget> dynamic = new ArrayList<>();
     private int left, top, panelW = 430, panelH = 286;
 
     public PhantomScreen() {
@@ -28,7 +27,6 @@ public final class PhantomScreen extends Screen {
 
     private void rebuild() {
         clearChildren();
-        dynamic.clear();
 
         left = (width - panelW) / 2;
         top = (height - panelH) / 2;
@@ -36,11 +34,15 @@ public final class PhantomScreen extends Screen {
         int sx = left + 14;
         int sy = top + 66;
 
-        String[] tabs = {"Performance", "Visuals", "HUD", "Textures", "Settings"};
+        String[] tabs = {
+            "Performance", "Visuals", "HUD", "Textures", "Settings"
+        };
+
         Tab[] values = Tab.values();
 
         for (int i = 0; i < tabs.length; i++) {
             final Tab next = values[i];
+
             addDrawableChild(
                 ButtonWidget.builder(Text.literal(tabs[i]), b -> {
                     tab = next;
@@ -58,11 +60,11 @@ public final class PhantomScreen extends Screen {
                 () -> PhantomConfig.get().showFps,
                 v -> PhantomConfig.get().showFps = v);
 
-            addSwitch(cx, cy + 39, w, "Reduced particles (preference)",
+            addSwitch(cx, cy + 39, w, "Reduced particles",
                 () -> PhantomConfig.get().reducedParticles,
                 v -> PhantomConfig.get().reducedParticles = v);
 
-            addAction(cx, cy + 84, w, "Apply: Low Graphics profile", () -> {
+            addAction(cx, cy + 84, w, "Apply: Low Graphics", () -> {
                 MinecraftClient mc = MinecraftClient.getInstance();
                 mc.options.getCloudRenderMode().setValue(
                     net.minecraft.client.option.CloudRenderMode.OFF
@@ -70,7 +72,7 @@ public final class PhantomScreen extends Screen {
                 mc.options.getParticles().setValue(ParticlesMode.MINIMAL);
             });
 
-            addAction(cx, cy + 122, w, "Apply: Balanced profile", () -> {
+            addAction(cx, cy + 122, w, "Apply: Balanced", () -> {
                 MinecraftClient mc = MinecraftClient.getInstance();
                 mc.options.getCloudRenderMode().setValue(
                     net.minecraft.client.option.CloudRenderMode.FAST
@@ -83,24 +85,25 @@ public final class PhantomScreen extends Screen {
                 () -> PhantomConfig.get().showFps,
                 v -> PhantomConfig.get().showFps = v);
 
-            addSwitch(cx, cy + 39, w, "Compact HUD (saved preference)",
+            addSwitch(cx, cy + 39, w, "Compact HUD",
                 () -> PhantomConfig.get().compactHud,
                 v -> PhantomConfig.get().compactHud = v);
 
         } else if (tab == Tab.VISUALS) {
             addAction(cx, cy, w, "Clouds: OFF", () ->
-                MinecraftClient.getInstance().options.getCloudRenderMode()
+                MinecraftClient.getInstance().options
+                    .getCloudRenderMode()
                     .setValue(net.minecraft.client.option.CloudRenderMode.OFF)
             );
 
             addAction(cx, cy + 39, w, "Particles: MINIMAL", () ->
-                MinecraftClient.getInstance().options.getParticles()
-                    .setValue(ParticlesMode.MINIMAL)
+                MinecraftClient.getInstance().options
+                    .getParticles().setValue(ParticlesMode.MINIMAL)
             );
 
             addAction(cx, cy + 78, w, "Particles: ALL", () ->
-                MinecraftClient.getInstance().options.getParticles()
-                    .setValue(ParticlesMode.ALL)
+                MinecraftClient.getInstance().options
+                    .getParticles().setValue(ParticlesMode.ALL)
             );
 
         } else if (tab == Tab.TEXTURES) {
@@ -140,7 +143,8 @@ public final class PhantomScreen extends Screen {
     }
 
     private void addSwitch(
-        int x, int y, int w, String name, BoolGet get, BoolSet set
+        int x, int y, int w, String name,
+        BoolGet get, BoolSet set
     ) {
         addAction(x, y, w, name + ": " + (get.get() ? "ON" : "OFF"), () -> {
             set.set(!get.get());
@@ -149,7 +153,9 @@ public final class PhantomScreen extends Screen {
         });
     }
 
-    private void addAction(int x, int y, int w, String label, Runnable action) {
+    private void addAction(
+        int x, int y, int w, String label, Runnable action
+    ) {
         addDrawableChild(
             ButtonWidget.builder(Text.literal(label), b -> action.run())
                 .dimensions(x, y, w, 29).build()
@@ -170,17 +176,20 @@ public final class PhantomScreen extends Screen {
         ctx.fill(left, top, left + panelW, top + 3, accent);
         ctx.fill(left + 12, top + 52, left + panelW - 12, top + 53, 0xFF303747);
 
-        ctx.drawText(textRenderer, "PHANTOM", left + 16, top + 15, 0xFFFFFFFF, false);
-        ctx.drawText(textRenderer, "CLIENT  /  PVP EDITION", left + 16, top + 31, 0xFF9AA8BE, false);
-        ctx.drawText(textRenderer, tab.name(), left + 145, top + 57, accent, false);
+        ctx.drawText(textRenderer, "PHANTOM",
+            left + 16, top + 15, 0xFFFFFFFF, false);
+
+        ctx.drawText(textRenderer, "CLIENT / PVP EDITION",
+            left + 16, top + 31, 0xFF9AA8BE, false);
+
+        ctx.drawText(textRenderer, tab.name(),
+            left + 145, top + 57, accent, false);
 
         super.render(ctx, mouseX, mouseY, delta);
 
-        ctx.drawText(
-            textRenderer,
-            "Right Shift  •  Save: config/phantomclient.json",
-            left + 15, top + panelH - 17, 0xFF8792A6, false
-        );
+        ctx.drawText(textRenderer,
+            "Right Shift | Save: config/phantomclient.json",
+            left + 15, top + panelH - 17, 0xFF8792A6, false);
     }
 
     @Override
@@ -194,4 +203,3 @@ public final class PhantomScreen extends Screen {
         super.close();
     }
 }
-```
