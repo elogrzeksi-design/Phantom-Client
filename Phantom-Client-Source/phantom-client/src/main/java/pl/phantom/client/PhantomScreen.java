@@ -1,4 +1,4 @@
-```java
+
 package pl.phantom.client;
 
 import net.minecraft.client.MinecraftClient;
